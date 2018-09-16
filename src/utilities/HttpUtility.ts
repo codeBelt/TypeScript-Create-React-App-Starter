@@ -1,3 +1,5 @@
+import HttpErrorResponse from './models/HttpErrorResponse';
+
 export enum RequestMethod {
     Get = 'GET',
     Post = 'POST',
@@ -13,46 +15,56 @@ export enum RequestMethod {
 export default class HttpUtility {
 
     public async get(endpoint: string): Promise<any> {
-        const request = new Request(endpoint, {
-            method: RequestMethod.Get,
-        });
+        // const requestData: RequestInit = {
+        //     body: JSON.stringify({asdf: 'asdf'})
+        // };
 
-        return this._fetch(request);
+        return this._fetch(endpoint, RequestMethod.Get);
     }
 
-    public async post(endpoint: string): Promise<any> {
+    // public async post(endpoint: string): Promise<Response | HttpErrorResponse> {
+    //     return this._fetch(endpoint, RequestMethod.Post);
+    // }
+    //
+    // public async put(endpoint: string): Promise<Response | HttpErrorResponse> {
+    //     return this._fetch(endpoint, RequestMethod.Put);
+    // }
+    //
+    // public async delete(endpoint: string): Promise<Response | HttpErrorResponse> {
+    //     return this._fetch(endpoint, RequestMethod.Delete);
+    // }
+
+    private async _fetch(endpoint: string, methodType: RequestMethod, init?: RequestInit): Promise<Body['json']> {
+        const headers = new Headers();
+
+        headers.append('Content-Type', 'application/json; charset=utf-8');
+
         const request = new Request(endpoint, {
-            method: RequestMethod.Post,
+            headers,
+            method: methodType,
         });
 
-        return this._fetch(request);
-    }
-
-    public async put(endpoint: string): Promise<any> {
-        const request = new Request(endpoint, {
-            method: RequestMethod.Put,
-        });
-
-        return this._fetch(request);
-    }
-
-    public async delete(endpoint: string): Promise<any> {
-        const request = new Request(endpoint, {
-            method: RequestMethod.Delete,
-        });
-
-        return this._fetch(request);
-    }
-
-    private async _fetch(request: Request, init?: RequestInit): Promise<Response> {
+        let response: Response;
         try {
-            const response: Response = await fetch(request, init);
+            response = await fetch(request, init);
+
+            if (response.ok === false) {
+                alert(`${response.statusText}`);
+            }
 
             return response.json();
         } catch (error) {
-            console.log(`error`, error);
-
-            return error;
+            console.log(`response`, response);
+            throw new HttpErrorResponse({
+                error,
+                message: error.message,
+                name: error.name,
+                ok: false,
+                stack: error.stack,
+                status: error.status,
+                statusText: error.statusText,
+                url: request.url,
+            });
         }
     }
 
