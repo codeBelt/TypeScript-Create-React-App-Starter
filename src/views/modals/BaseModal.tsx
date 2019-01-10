@@ -1,30 +1,21 @@
 import React from 'react';
-import {connect} from 'react-redux';
-import {Dispatch} from 'redux';
+import {connect, DispatchProp} from 'react-redux';
 import IAction from '../../stores/IAction';
 import IStore from '../../stores/IStore';
 import KeyboardKeyEnum from '../../constants/KeyboardKeyEnum';
 import ModalAction from '../../stores/modal/ModalAction';
 
 interface IProps {
-    isRequired?: boolean;
+    readonly isRequired: boolean;
 }
 interface IState {}
 interface IStateToProps {}
-interface IDispatchToProps {
-    dispatch: (action: IAction<any>) => void;
-}
 
-const mapStateToProps = (state: IStore) => ({});
-const mapDispatchToProps = (dispatch: Dispatch<IAction<any>>): IDispatchToProps => ({
-    dispatch,
-});
+const mapStateToProps = (state: IStore, ownProps: IProps): IStateToProps => ({});
 
-type PropsUnion = IStateToProps & IDispatchToProps & IProps;
+class BaseModal extends React.Component<IProps & IStateToProps & DispatchProp<IAction<any>>, IState> {
 
-class BaseModal extends React.Component<PropsUnion, IState> {
-
-    public static defaultProps: Partial<PropsUnion> = {
+    public static defaultProps: IProps = {
         isRequired: false,
     };
 
@@ -87,5 +78,5 @@ class BaseModal extends React.Component<PropsUnion, IState> {
 
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(BaseModal);
+export default connect(mapStateToProps)(BaseModal);
 

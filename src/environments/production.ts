@@ -1,5 +1,11 @@
+import CacheService from '../utilities/CacheService';
+
 export default {
-    endpointUrl: {
+    apiCacheTime: {
+        duration: 7,
+        unit: CacheService.DAYS,
+    },
+    api: {
         categories: 'https://swapi.co/api/',
         people: 'https://swapi.co/api/people/',
         planets: 'https://swapi.co/api/planets/',
@@ -10,4 +16,5 @@ export default {
         topics: '/data/content.json',
     },
     isProduction: true,
+    isDevelopment: false,
 };

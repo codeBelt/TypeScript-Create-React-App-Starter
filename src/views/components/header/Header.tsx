@@ -1,8 +1,7 @@
 import styles from './Header.module.scss';
 
 import React from 'react';
-import {connect} from 'react-redux';
-import {Dispatch} from 'redux';
+import {connect, DispatchProp} from 'react-redux';
 import IAction from '../../../stores/IAction';
 import IStore from '../../../stores/IStore';
 import {Link} from 'react-router-dom';
@@ -13,16 +12,10 @@ import ModalAction from '../../../stores/modal/ModalAction';
 interface IProps {}
 interface IState {}
 interface IStateToProps {}
-interface IDispatchToProps {
-    dispatch: (action: IAction<any>) => void;
-}
 
-const mapStateToProps = (state: IStore): IStateToProps => ({});
-const mapDispatchToProps = (dispatch: Dispatch<IAction<any>>): IDispatchToProps => ({
-    dispatch,
-});
+const mapStateToProps = (state: IStore, ownProps: IProps): IStateToProps => ({});
 
-class Header extends React.Component<IStateToProps & IDispatchToProps & IProps, IState> {
+class Header extends React.PureComponent<IProps & IStateToProps & DispatchProp<IAction<any>>, IState> {
 
     public render(): JSX.Element {
         return (
@@ -32,14 +25,14 @@ class Header extends React.Component<IStateToProps & IDispatchToProps & IProps, 
                         <li><Link to={RouteEnum.Home}>Home</Link></li>
                         <li><Link to={RouteEnum.Topics}>Topics</Link></li>
                     </ul>
-                    <button className="btn" onClick={this._addModal}>Show Modal</button>
+                    <button className="btn" onClick={this._onClickAddModal}>Show Modal</button>
                 </div>
                 <hr />
             </>
         );
     }
 
-    private _addModal = async (event: React.MouseEvent<HTMLButtonElement>): Promise<void> => {
+    private _onClickAddModal = (event: React.MouseEvent<HTMLButtonElement>): void => {
         const modal: JSX.Element = (
             <GenericModal
                 isRequired={true}
@@ -54,4 +47,4 @@ class Header extends React.Component<IStateToProps & IDispatchToProps & IProps, 
 
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Header);
+export default connect(mapStateToProps)(Header);

@@ -1,0 +1,11 @@
+.container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.item {
+    flex-basis: 100px;
+    border: solid 1px green;
+    margin: 5px;
+    cursor: pointer;
+}

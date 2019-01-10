@@ -1,4 +1,4 @@
-import {createStore, applyMiddleware} from 'redux';
+import {createStore, applyMiddleware, Middleware} from 'redux';
 import {routerMiddleware} from 'connected-react-router';
 import {History} from 'history';
 import rootReducer from '../stores/rootReducer';
@@ -7,6 +7,8 @@ import createSagaMiddleware, {END, SagaMiddleware} from 'redux-saga';
 import rootSaga from '../stores/rootSaga';
 import IStore from '../stores/IStore';
 import ISagaStore from '../stores/ISagaStore';
+import reduxFreeze from "redux-freeze";
+import environment from 'environment';
 
 export default class ProviderUtility {
 
@@ -14,14 +16,17 @@ export default class ProviderUtility {
 
         const sagaMiddleware: SagaMiddleware<any> = createSagaMiddleware();
 
+        const middleware: Middleware[] = [
+            environment.isDevelopment ? reduxFreeze : null,
+            routerMiddleware(history),
+            sagaMiddleware,
+        ].filter(Boolean);
+
         const store: any = createStore(
             rootReducer(history),
             initialState,
             composeWithDevTools(
-                applyMiddleware(
-                    routerMiddleware(history),
-                    sagaMiddleware,
-                ),
+                applyMiddleware(...middleware),
             ),
         );
 

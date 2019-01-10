@@ -7,13 +7,12 @@ import ITopic from '../../../stores/content/models/ITopic';
 import MetaAction from '../../../stores/meta/MetaAction';
 import IAction from '../../../stores/IAction';
 import IStore from '../../../stores/IStore';
-import {Dispatch} from 'redux';
-import {connect} from 'react-redux';
+import {connect, DispatchProp} from 'react-redux';
 import IResource from '../../../stores/content/models/IResource';
 import {ITopicsRoutePramas} from '../Topics';
 
 export interface ITopicRoutePramas {
-    subId: string;
+    readonly subId: string;
 }
 
 interface IProps {}
@@ -21,18 +20,12 @@ interface IState {}
 interface IStateToProps {
     readonly topics: ITopic[];
 }
-interface IDispatchToProps {
-    dispatch: (action: IAction<any>) => void;
-}
 
-const mapStateToProps = (state: IStore): IStateToProps => ({
+const mapStateToProps = (state: IStore, ownProps: IProps): IStateToProps => ({
     topics: state.contentReducer.topics,
 });
-const mapDispatchToProps = (dispatch: Dispatch<IAction<any>>): IDispatchToProps => ({
-    dispatch,
-});
 
-class Topic extends React.Component<IStateToProps & IDispatchToProps & IProps & RouteComponentProps<ITopicsRoutePramas>, IState> {
+class Topic extends React.Component<IProps & IStateToProps & RouteComponentProps<ITopicsRoutePramas> & DispatchProp<IAction<any>>, IState> {
 
     public componentDidMount(): void {
         this.props.dispatch(MetaAction.setMeta({title: 'Topic View'}));
@@ -72,4 +65,4 @@ class Topic extends React.Component<IStateToProps & IDispatchToProps & IProps & 
 
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Topic);
+export default connect(mapStateToProps)(Topic);

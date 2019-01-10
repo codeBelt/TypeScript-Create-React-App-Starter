@@ -1,36 +1,28 @@
 import React from 'react';
 import BaseModal from './BaseModal';
-import {connect} from 'react-redux';
+import {connect, DispatchProp} from 'react-redux';
 import IAction from '../../stores/IAction';
 import IStore from '../../stores/IStore';
-import {Dispatch} from 'redux';
 import ModalAction from '../../stores/modal/ModalAction';
 
 export interface IProps<T> {
-    isRequired?: boolean;
-    message: string;
-    rejectLabel?: string;
-    acceptLabel?: string;
-    modalData?: T;
-    onAccept?: (props: IProps<T>) => void;
-    onReject?: (props: IProps<T>) => void;
+    readonly isRequired?: boolean;
+    readonly message: string;
+    readonly rejectLabel?: string;
+    readonly acceptLabel?: string;
+    readonly modalData?: T;
+    readonly onAccept?: (props: IProps<T>) => void;
+    readonly onReject?: (props: IProps<T>) => void;
 }
 interface IState {}
 interface IStateToProps {}
-interface IDispatchToProps {
-    dispatch: (action: IAction<any>) => void;
-}
 
-const mapStateToProps = (state: IStore) => ({});
-const mapDispatchToProps = (dispatch: Dispatch<IAction<any>>): IDispatchToProps => ({
-    dispatch,
-});
+const mapStateToProps = (state: IStore, ownProps: IProps<any>): IStateToProps => ({});
 
-type PropsUnion = IStateToProps & IDispatchToProps & IProps<any>;
+class GenericModal extends React.Component<IProps<any> & IStateToProps & DispatchProp<IAction<any>>, IState> {
 
-class GenericModal extends React.Component<PropsUnion, IState> {
-
-    public static defaultProps: Partial<PropsUnion> = {
+    public static defaultProps: IProps<any> = {
+        message: '',
         modalData: null,
     };
 
@@ -76,4 +68,4 @@ class GenericModal extends React.Component<PropsUnion, IState> {
 
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(GenericModal);
+export default connect(mapStateToProps)(GenericModal);

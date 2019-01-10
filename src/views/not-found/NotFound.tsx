@@ -1,6 +1,5 @@
 import React from 'react';
-import {connect} from 'react-redux';
-import {Dispatch} from 'redux';
+import {connect, DispatchProp} from 'react-redux';
 import IAction from '../../stores/IAction';
 import IStore from '../../stores/IStore';
 import MetaAction from '../../stores/meta/MetaAction';
@@ -8,16 +7,10 @@ import MetaAction from '../../stores/meta/MetaAction';
 export interface IProps {}
 interface IState {}
 interface IStateToProps {}
-interface IDispatchToProps {
-    dispatch: (action: IAction<any>) => void;
-}
 
-const mapStateToProps = (state: IStore): IStateToProps => ({});
-const mapDispatchToProps = (dispatch: Dispatch<IAction<any>>): IDispatchToProps => ({
-    dispatch,
-});
+const mapStateToProps = (state: IStore, ownProps: IProps): IStateToProps => ({});
 
-class NotFound extends React.Component<IStateToProps & IDispatchToProps & IProps, IState> {
+class NotFound extends React.Component<IProps & IStateToProps & DispatchProp<IAction<any>>, IState> {
 
     public componentDidMount(): void {
         this.props.dispatch(MetaAction.setMeta({title: '404 Page Not Found'}));
@@ -33,4 +26,4 @@ class NotFound extends React.Component<IStateToProps & IDispatchToProps & IProps
 
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(NotFound);
+export default connect(mapStateToProps)(NotFound);

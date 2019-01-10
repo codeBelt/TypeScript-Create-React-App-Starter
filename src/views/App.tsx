@@ -14,8 +14,8 @@ import {Dispatch} from 'redux';
 import Header from './components/header/Header';
 
 interface IProps {
-    history: History;
-    dispatch: Dispatch<IAction<any>>;
+    readonly history: History;
+    readonly dispatch: Dispatch<IAction<any>>;
 }
 interface IState {}
 
@@ -46,7 +46,5 @@ export default class App extends React.Component<IProps, IState> {
         );
     }
 
-
-
-}
+                        }
 
